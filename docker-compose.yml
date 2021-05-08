@@ -1,0 +1,34 @@
+version: "3.9"
+services:
+  # BILLING BOX SERVICE
+  boxbilling:
+    volumes:
+      - .:/var/www/htdocs
+    container_name: "boxbilling"
+    build: .
+    ports:
+      - "8000:8000"
+    environment:
+      - NGINX_HOST="localhost"
+      - NGINX_PORT="8000"
+      - MYSQL_PASSWORD="billingbox"
+    depends_on:
+      - database
+    networks:
+      - dev_network
+
+  # DATABASE SERVICE
+  database:
+    container_name: "mysql"
+    image: mysql:latest
+    command: --default-authentication-plugin=mysql_native_password
+    restart: always
+    environment:
+      MYSQL_ROOT_PASSWORD: billingbox
+    networks:
+      - dev_network
+
+networks:
+  dev_network:
+    name: "development network"
+    driver: bridge
