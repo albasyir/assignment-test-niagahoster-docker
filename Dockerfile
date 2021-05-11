@@ -1,25 +1,35 @@
-FROM nginx:stable-alpine
+# https://wiki.alpinelinux.org/wiki/Nginx_with_PHP
+FROM alpine:3.13
 
-# we work on :
-WORKDIR /var/www/htdocs
+# PHP Depedencies
+RUN apk --no-cache add \ 
+  php8 php8-fpm php8-opcache php8-mysqli php8-pdo_mysql \ 
+  php8-json php8-openssl curl php8-curl php8-zlib php8-gettext \
+  php8-xml php8-phar php8-intl php8-dom php8-xmlreader \
+  php8-ctype php8-session php8-mbstring php8-gd
 
+COPY ./docker/fpm.conf /etc/php8/php-fpm.d/www.conf
+COPY ./docker/php.ini /etc/php8/conf.d/custom.ini
 
-# Update latest OS that we have :)
-RUN apk update && apk upgrade
+RUN apk add --no-cache nginx
+RUN rm /etc/nginx/conf.d/default.conf
+COPY ./docker/nginx.conf /etc/nginx/nginx.conf
 
-# we need nginx configuration
-COPY docker-nginx.conf /etc/nginx/nginx.conf
+RUN apk add --no-cache supervisor
+COPY ./docker/supervisord.conf /etc/supervisor/conf.d/supervisord.conf
 
-# Install the software which we need ~ PHP :)
-RUN apk add --no-cache php7 php7-fpm php7-opcache php7-gd php7-mysqli php7-zlib php7-curl
+RUN mkdir -p /var/www/html
+WORKDIR /var/www/html
 
-# Make sure "service overcome" with our project :) for each boot up!
-# RUN rc-update add php-fpm7 default BUG
+RUN chown -R nobody.nobody /var/www/html
+RUN chown -R nobody.nobody /run
+RUN chown -R nobody.nobody /var/lib/nginx
+RUN chown -R nobody.nobody /var/log/nginx
 
-# we should copy our base project to right plase right.
-COPY . .
-RUN rm ./docker-nginx.conf
+# Switch to use a non-root user from here on
+USER nobody
 
+COPY --chown=nobody . /var/www/html
 
-# export nginx configuraton port
-EXPOSE 8000
+EXPOSE 8004
+CMD ["/usr/bin/supervisord", "-c", "/etc/supervisor/conf.d/supervisord.conf"]
