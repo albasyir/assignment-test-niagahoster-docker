@@ -8,6 +8,8 @@ RUN apk --no-cache add \
   php8-xml php8-phar php8-intl php8-dom php8-xmlreader \
   php8-ctype php8-session php8-mbstring php8-gd
 
+RUN apk --no-cache add nano mysql-client
+
 COPY ./docker/fpm.conf /etc/php8/php-fpm.d/www.conf
 COPY ./docker/php.ini /etc/php8/conf.d/custom.ini
 
@@ -33,3 +35,4 @@ COPY --chown=nobody . /var/www/html
 
 EXPOSE 8004
 CMD ["/usr/bin/supervisord", "-c", "/etc/supervisor/conf.d/supervisord.conf"]
+

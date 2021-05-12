@@ -25,7 +25,7 @@ return array(
   /**
    * Enable or Disable the display of notices
    */
-  'debug'     => false,
+  'debug'     => true,
 
   /**
    * Enable or Disable search engine friendly urls.
@@ -37,7 +37,7 @@ return array(
   /**
    * Application timezone
    */
-  'timezone'    =>  'UTC',
+  'timezone'    =>  'Asia/Jakarta',
 
   /**
    * Set BoxBilling locale
@@ -74,7 +74,7 @@ return array(
     /**
      * Database hostname. Don't change this if in doubt.
      */
-    'host'   => getenv('DB_HOST') ?: '127.0.0.1',
+    'host'   => getenv('DB_HOST') ?: 'mysql',
 
     /**
      * The name of the database for BoxBilling
@@ -84,7 +84,7 @@ return array(
     /**
      * Database username
      */
-    'user'   => getenv('DB_USER') ?: 'root',
+    'user'   => getenv('DB_USER') ?: 'boxbilling',
 
     /**
      * Database password
@@ -93,7 +93,7 @@ return array(
   ),
 
   'twig'   =>  array(
-    'debug'         =>  false,
+    'debug'         =>  true,
     'auto_reload'   =>  false,
     'cache'         =>  dirname(__FILE__) . '/bb-data/cache',
   ),

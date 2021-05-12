@@ -1,3 +1,4 @@
-DB_NAME="boxbilling"
-DB_USER="root"
-DB_PASS="boxbilling"
+- DB_HOST="mysql"
+- DB_NAME="boxbilling"
+- DB_USER="boxbilling"
+- DB_PASS="boxbilling"

@@ -7,7 +7,7 @@ services:
     container_name: "boxbilling"
     build: .
     ports:
-      - "8004:8004"
+      - "80:8004"
     depends_on:
       - database
     networks:
@@ -17,19 +17,19 @@ services:
   database:
     container_name: "mysql"
     image: mysql:8.0.25
-    restart: unless-stopped
-    tty: true
     volumes:
       - ./bb-seeder:/docker-entrypoint-initdb.d
     ports:
       - "3306:3306"
+    expose:
+      - "3306"
     command: --default-authentication-plugin=mysql_native_password
-    restart: always
     environment:
-      MYSQL_USER: billingbox
-      MYSQL_PASSWORD: billingbox
-      MYSQL_DATABASE: billingbox
-      MYSQL_ROOT_PASSWORD: billingbox
+      MYSQL_USER: boxbilling
+      MYSQL_PASSWORD: boxbilling
+      MYSQL_DATABASE: boxbilling
+      MYSQL_ROOT_PASSWORD: boxbilling
+      MYSQL_ROOT_HOST: "%"
     networks:
       - dev_network
 
